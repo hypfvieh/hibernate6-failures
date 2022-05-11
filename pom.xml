@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.hypfvieh</groupId>
-    <artifactId>hibernate6-onetoone-fail</artifactId>
+    <artifactId>hibernate6-failures</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -38,12 +38,21 @@
 
     <dependencies>
         
+        <!-- Hibernate 6 to show errors, disable if you enable hibernate 5 -->
         <dependency>
            <groupId>org.hibernate.orm</groupId>
            <artifactId>hibernate-core</artifactId>
-           <version>6.0.0.Final</version>
+           <version>6.0.1.Final</version>
         </dependency>
         
+        <!-- hibernate 5 to check if test is working with older major -->
+        <!--
+        <dependency>
+           <groupId>org.hibernate</groupId>
+           <artifactId>hibernate-core-jakarta</artifactId>
+           <version>5.6.8.Final</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

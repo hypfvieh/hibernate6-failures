@@ -27,8 +27,7 @@
         <property name="hbm2ddl.auto">create</property>
 
         <!-- Names the annotated entity class -->
-        <mapping class="com.github.hypfvieh.sandbox.hibernate.data.DbEntity" />
-        <mapping class="com.github.hypfvieh.sandbox.hibernate.data.ContentEntry" />
+        <mapping class="com.github.hypfvieh.sandbox.hibernate.data.SimpleEntry" />
     </session-factory>
 
 </hibernate-configuration>

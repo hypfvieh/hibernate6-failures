@@ -1,8 +1,5 @@
 package com.github.hypfvieh.sandbox.hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -10,12 +7,12 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.Test;
 
-import com.github.hypfvieh.sandbox.hibernate.data.ContentEntry;
-import com.github.hypfvieh.sandbox.hibernate.data.DbEntity;
+import com.github.hypfvieh.sandbox.hibernate.data.SimpleEntry;
 
 import jakarta.persistence.EntityManager;
 
-class HibernateFailTest {
+class HibernateLowerFuncTest {
+
     static SessionFactory initDb() {
         Configuration configuration = new Configuration();
 
@@ -35,54 +32,34 @@ class HibernateFailTest {
         }
 
     }
-    
+
     @Test
-    void testNullList() {
-        // no exception when list is null
-        test(null);
+    void testLower() {
+       test("lower");
     }
 
     @Test
-    void testEmptyList() {
-        // when selecting records with an empty list, hibernate 6.0.Final throws
-        // jakarta.persistence.PersistenceException
-        test(List.of());
-    }
-    
-    @Test
-    void testFilledList() {
-        // no exception if there is any item in list
-        test(List.of(new ContentEntry()));
+    void testUpper() {
+       test("upper");
     }
 
-    @Test
-    void testFilledNullList() {
-        // no exception if there is null in list
-        List<ContentEntry> l = new ArrayList<>();
-        l.add(null);
-        test(l);
-    }
-
-    
-    void test(List<ContentEntry> _inList) {
+    void test(String _func) {
         try (SessionFactory initDb = initDb()) {
             EntityManager em = initDb.createEntityManager();
 
-            ContentEntry contentEntry = new ContentEntry();
-            contentEntry.setContent("foo");
-            
-            DbEntity dbEntity = new DbEntity();
-            dbEntity.setContent(contentEntry);
-            
-            em.persist(dbEntity);
-            
-            em.createQuery("FROM DbEntity WHERE content IN (:vals)", DbEntity.class)
-                .setParameter("vals", _inList)
-                .getResultList()
-                .forEach(e -> System.out.println(e));
-            
-            em.close();
-        }    
-    }
+            em.getTransaction().begin();
+            SimpleEntry entry = new SimpleEntry();
+            entry.setDescription("foo");
 
+            em.persist(entry);
+            em.getTransaction().commit();
+
+            em.createQuery("FROM SimpleEntry WHERE " + _func + "(description) LIKE " + _func + "(:name)", SimpleEntry.class)
+                .setParameter("name", "%foo%")
+                .getResultList()
+                .forEach(e -> System.out.println(e)); // will print SimpleEntry [id=1, description=foo] when used with hibernate 5.6 and throws when using hibernate 6.0.1
+
+            em.close();
+        }
+    }
 }
