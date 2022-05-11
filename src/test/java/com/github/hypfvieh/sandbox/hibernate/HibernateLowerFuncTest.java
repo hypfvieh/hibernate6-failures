@@ -54,8 +54,8 @@ class HibernateLowerFuncTest {
             em.persist(entry);
             em.getTransaction().commit();
 
-            em.createQuery("FROM SimpleEntry WHERE " + _func + "(description) LIKE " + _func + "(:name)", SimpleEntry.class)
-                .setParameter("name", "%foo%")
+            em.createQuery("FROM SimpleEntry WHERE " + _func + "(description) = " + _func + "(:name)", SimpleEntry.class)
+                .setParameter("name", "foo")
                 .getResultList()
                 .forEach(e -> System.out.println(e)); // will print SimpleEntry [id=1, description=foo] when used with hibernate 5.6 and throws when using hibernate 6.0.1
 
